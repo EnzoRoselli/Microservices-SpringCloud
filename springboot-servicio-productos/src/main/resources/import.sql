@@ -1,0 +1,1 @@
+INSERT INTO products(name, price, created_at) values('Panasonic', 800, NOW());

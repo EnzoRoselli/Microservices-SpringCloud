@@ -1,0 +1,13 @@
+package com.udemy.springbootserviciouserscommons;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class SpringbootServicioUsersCommonsApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}

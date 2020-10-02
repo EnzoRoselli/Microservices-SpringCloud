@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/springboot-servicio-items/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot-servicio-productos/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot-service-config-server/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot-servicio-eureka-server/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot-microservicio-zuul-server/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot-servicio-users/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot-servicio-commons/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot-servicio-users-commons/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot-servicio-oauth/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="false" project-jdk-name="corretto-11" project-jdk-type="JavaSDK" />
+</project>
