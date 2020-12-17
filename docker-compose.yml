@@ -1,0 +1,146 @@
+version: '3.7'
+services:
+  rabbitmq389:
+    image: rabbitmq:3.8.9-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    restart: always
+    networks:
+      - spring-cloud
+
+  zipkin-server:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    environment:
+      STORAGE_TYPE: mem
+      RABBIT_URI: amqp://guest:guest@rabbitmq389:5672
+    restart: always
+    depends_on: 
+      - rabbitmq389
+    networks:
+      - spring-cloud
+
+  config-server:
+    image: enzoroselli/config-server
+    ports:
+      - "8888:8888"
+    restart: always
+    networks:
+      - spring-cloud
+      
+  eureka-server:
+    image: enzoroselli/eureka-server
+    ports:
+      - "8761:8761"
+    restart: always
+    networks:
+      - spring-cloud
+
+  mysql8:
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    restart: always
+    networks:
+      - spring-cloud
+    environment: 
+      MYSQL_DATABASE: db_cloud_microservices
+      MYSQL_ROOT_PASSWORD: root
+
+  postgres13:
+    image: postgres:13-alpine
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - spring-cloud
+    environment: 
+      POSTGRES_DB: db_cloud_microservices
+      POSTGRES_PASSWORD: root
+
+  servicio-productos:
+    image: enzoroselli/servicio-productos
+    environment:
+      RABBIT_URI: amqp://guest:guest@rabbitmq389:5672
+    restart: always
+    depends_on: 
+      - config-server
+      - eureka-server
+      - mysql8
+      - rabbitmq389
+      - zipkin-server
+    networks:
+      - spring-cloud
+    
+  servicio-usuarios:
+    image: enzoroselli/servicio-usuarios
+    environment:
+      RABBIT_URI: amqp://guest:guest@rabbitmq389:5672
+    restart: always
+    depends_on: 
+      - config-server
+      - eureka-server
+      - postgres13
+      - rabbitmq389
+      - zipkin-server
+    networks:
+      - spring-cloud
+
+  servicio-items:
+    image: enzoroselli/servicio-items
+    ports:
+      - "8081:8081"
+      - "8005:8005"
+      - "8007:8007"
+    environment:
+      RABBIT_URI: amqp://guest:guest@rabbitmq389:5672
+    restart: always
+    networks:
+      - spring-cloud
+    depends_on: 
+      - config-server
+      - eureka-server
+      - servicio-productos
+      - rabbitmq389
+      - zipkin-server
+  
+  servicio-oauth:
+    image: enzoroselli/servicio-oauth
+    ports:
+      - "9100:9100"
+    environment:
+      RABBIT_URI: amqp://guest:guest@rabbitmq389:5672
+    restart: always
+    networks:
+      - spring-cloud
+    depends_on: 
+      - config-server
+      - eureka-server
+      - servicio-usuarios
+      - rabbitmq389
+      - zipkin-server
+
+  zuul-server:
+    image: enzoroselli/zuul-server
+    ports:
+      - "8080:8080"
+    environment:
+      RABBIT_URI: amqp://guest:guest@rabbitmq389:5672
+    restart: always
+    depends_on: 
+      - config-server
+      - eureka-server
+      - servicio-productos
+      - servicio-items
+      - servicio-usuarios
+      - servicio-oauth
+      - rabbitmq389
+      - zipkin-server
+    networks:
+      - spring-cloud
+  
+networks:
+  spring-cloud:
